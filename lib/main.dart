@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:qr_scanner/scanner_overlay.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final MobileScannerController _scannerController = MobileScannerController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,24 +37,31 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Scanner"),
         actions: [
           IconButton(
-              onPressed: (){
-            _scannerController.switchCamera();
-          },
-              icon: const Icon(Icons.flip_camera_android)
-          )
+              onPressed: () {
+                _scannerController.switchCamera();
+              },
+              icon: const Icon(Icons.flip_camera_android))
         ],
       ),
-      body: MobileScanner(
-          allowDuplicates: false,
-          controller: _scannerController,
-          onDetect: (barcode, args) {
-            if (barcode.rawValue == null) {
-              debugPrint('Failed to scan QR');
-            } else {
-              final String code = barcode.rawValue!;
-              debugPrint('QR found! $code');
-            }
-          }),
+      body: Stack(
+        children: [
+          MobileScanner(
+              allowDuplicates: true,
+              controller: _scannerController,
+              onDetect: (barcode, args) {
+                if (barcode.rawValue == null) {
+                  debugPrint('Failed to scan QR');
+                } else {
+                  final String code = barcode.rawValue!;
+                  debugPrint('QR found! $code');
+                  if (code == "") {
+                    //Perform OCR
+                  }
+                }
+              }),
+          QRScannerOverlay(overlayColour: Colors.black.withOpacity(0.5))
+        ],
+      ),
     );
   }
 }
