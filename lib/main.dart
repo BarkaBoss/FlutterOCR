@@ -47,10 +47,10 @@ class _HomePageState extends State<HomePage> {
           controller: _scannerController,
           onDetect: (barcode, args) {
             if (barcode.rawValue == null) {
-              debugPrint('Failed to scan Barcode');
+              debugPrint('Failed to scan QR');
             } else {
               final String code = barcode.rawValue!;
-              debugPrint('Barcode found! $code');
+              debugPrint('QR found! $code');
             }
           }),
     );
